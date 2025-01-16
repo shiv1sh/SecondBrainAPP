@@ -1,8 +1,12 @@
 import { ShareIcon } from "../icons/ShareIcon"
-
-export const Chat = () => {
+interface CardProps {
+    title: string,
+    type: "twitter" | "youtube",
+    link: string
+}
+export const Card = ({ type, title, link }: CardProps) => {
     return (
-        <div className={"p-4 bg-white rounded border-gray-200 max-w-96 border max-w-72"}>
+        <div className={"p-4 bg-white rounded border-gray-200 border max-w-96 min-w-10"}>
             <div className={"flex justify-between"}>
                 <div className={"flex gap-3 text-gray-500 text-md items-center"}>
                     <ShareIcon />
@@ -10,14 +14,23 @@ export const Chat = () => {
                 </div>
                 <div className={"flex gap-3 text-gray-500 items-center"}>
                     <ShareIcon />
-                    <ShareIcon />
+                    <a href={link} target="_blank">
+                        <ShareIcon />
+                    </a>
                 </div>
             </div>
             <div className={"pt-4"}>
-                {/* <iframe className={"w-full"}  src="https://www.youtube.com/embed/HBgFvEIw12A?si=gP-d6TnP5aro3gtx" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe> */}
-                <blockquote className="twitter-tweet">
-                    <a href="https://twitter.com/username/status/807811447862468608"></a>
-                </blockquote>
+                <div className={"font-medium"}>
+                {title}
+                </div>
+                {type === "youtube" &&
+                    <iframe className={"w-full"} src={link.replace("watch", "embed")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                }
+                {type === "twitter" &&
+                    <blockquote className="twitter-tweet">
+                        <a href={link.replace("x.com","twitter.com")}></a>
+                    </blockquote>
+                }
             </div>
         </div>
     )
