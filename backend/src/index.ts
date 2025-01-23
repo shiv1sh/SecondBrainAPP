@@ -4,17 +4,20 @@ import { ContentModel, LinkModel, UserModel } from './db';
 import { JWT_SECRET } from './config';
 import { userMiddleware } from './midddleware';
 import { generateRandomhHash } from './utils';
+import cors from "cors"
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.listen(3000, () => {
     console.log("Started running on port 3000");
 })
 
 app.post("/api/v1/signup", async (req, res) => {
+    console.log(req.body)
     const userName = req.body.userName;
     const password = req.body.password;
-
+    console.log(userName+" "+password)
     try {
         await UserModel.create({ userName, password });
         res.json({
@@ -31,6 +34,8 @@ app.post("/api/v1/signup", async (req, res) => {
 app.post("/api/v1/signin", async (req, res) => {
     const userName = req.body.userName;
     const password = req.body.password;
+
+    console.log(userName + " "+ password);
 
     try {
         const existingUser = await UserModel.findOne({ userName, password });
@@ -60,7 +65,7 @@ app.post("/api/v1/createContent", userMiddleware, async (req, res) => {
         const added = await ContentModel.create({
             title: title,
             link: link,
-            tags: req.body.tags,
+            type: req.body.type,
             userId: req.userId
         })
         if (added) {

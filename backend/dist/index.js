@@ -18,14 +18,18 @@ const db_1 = require("./db");
 const config_1 = require("./config");
 const midddleware_1 = require("./midddleware");
 const utils_1 = require("./utils");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 app.listen(3000, () => {
     console.log("Started running on port 3000");
 });
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     const userName = req.body.userName;
     const password = req.body.password;
+    console.log(userName + " " + password);
     try {
         yield db_1.UserModel.create({ userName, password });
         res.json({
@@ -42,6 +46,7 @@ app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, funct
 app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userName = req.body.userName;
     const password = req.body.password;
+    console.log(userName + " " + password);
     try {
         const existingUser = yield db_1.UserModel.findOne({ userName, password });
         if (existingUser) {
@@ -70,7 +75,7 @@ app.post("/api/v1/createContent", midddleware_1.userMiddleware, (req, res) => __
         const added = yield db_1.ContentModel.create({
             title: title,
             link: link,
-            tags: req.body.tags,
+            type: req.body.type,
             userId: req.userId
         });
         if (added) {
